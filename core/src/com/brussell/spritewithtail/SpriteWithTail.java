@@ -25,6 +25,8 @@ public class SpriteWithTail extends ApplicationAdapter {
   // The flight path definition
   private Vector2[] _controlPoints;
   private CatmullRomSpline<Vector2> _catmullRomSpline;
+  private Vector2 _oldHeading = new Vector2();
+  private Vector2 _newHeading = new Vector2();
 
   // Traversing the flight path
   private float _progressionAcc;
@@ -71,31 +73,43 @@ public class SpriteWithTail extends ApplicationAdapter {
   }
 
   private void initCatmullRomSpline() {
-    Vector2 startEndPos = new Vector2(Gdx.graphics.getWidth() * 0.5f, 0);
-    Vector2 takeoffPos = new Vector2(Gdx.graphics.getWidth() * 0.8f, Gdx.graphics.getHeight() * 0.2f);
-    Vector2 approachPos = new Vector2(Gdx.graphics.getWidth() * 0.2f, Gdx.graphics.getHeight() * 0.2f);
-
+    Array<Vector2> controlPoints = new Array<Vector2>();
     // Takeoff
-    _controlPoints[0] = startEndPos;
-    _controlPoints[1] = takeoffPos;
+    controlPoints.add(getFlightPathVector(0.5f, 0f));
+    controlPoints.add(getFlightPathVector(0.8f, 0.2f));
+
     // Aerobatics
     for (int i = 2; i < NUM_CONTROL_POINTS - 1; i++) {
-      Vector2 pointOnFlightPath = new Vector2();
-      int avoidInfiniteLoopCount = 0;
+      int infiniteLoopProtection = 0;
+      Vector2 newControlPoint = new Vector2();
+      float deviation;
       do {
-        pointOnFlightPath.set(MathUtils.random(Gdx.graphics.getWidth()), MathUtils.random(Gdx.graphics.getHeight()));
-        avoidInfiniteLoopCount++;
+        setFlightPathVector(MathUtils.random(), MathUtils.random(), newControlPoint);
+        infiniteLoopProtection++;
+
+        _oldHeading.set(controlPoints.get(i - 1)).sub(controlPoints.get(i - 2));
+        _newHeading.set(newControlPoint).sub(controlPoints.get(i - 1));
+        deviation = Math.abs(_oldHeading.angle(_newHeading));
       }
-      // Prefer to not flip back on ourselves, but OK if can't avoid in reasonable number of tries
-      while (Math.abs(pointOnFlightPath.angle(_controlPoints[i - 1])) > 90f && avoidInfiniteLoopCount < 2500);
-      _controlPoints[i] = pointOnFlightPath;
+      while (deviation > 90f && infiniteLoopProtection < 500);
+      controlPoints.add(newControlPoint);
     }
     // Landing
-    _controlPoints[NUM_CONTROL_POINTS - 1] = approachPos;
+    controlPoints.add(getFlightPathVector(0.2f, 0.2f));
 
     // Create the spline and reset the accumulator
+    _controlPoints = controlPoints.toArray(Vector2.class);
     _catmullRomSpline = new CatmullRomSpline<Vector2>(_controlPoints, true);
     _progressionAcc = 0f;
+  }
+
+  private Vector2 getFlightPathVector(final float fractionScreenX, final float fractionScreenY) {
+    return setFlightPathVector(fractionScreenX, fractionScreenY, new Vector2());
+  }
+
+  private Vector2 setFlightPathVector(final float fractionScreenX, final float fractionScreenY, final Vector2 flightPathVector) {
+    flightPathVector.set(Gdx.graphics.getWidth() * fractionScreenX, Gdx.graphics.getHeight() * fractionScreenY);
+    return flightPathVector;
   }
 
   public void render() {
