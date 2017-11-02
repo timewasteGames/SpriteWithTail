@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class SpriteWithTail extends ApplicationAdapter {
-  private static final int NUM_CONTROL_POINTS = 7;
+  private static final int NUM_CONTROL_POINTS = 10;
   private static final float SPEED = 10f;
 
   // Rendering

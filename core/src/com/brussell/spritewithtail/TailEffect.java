@@ -12,7 +12,6 @@ public class TailEffect {
   public TailEffect(final Sprite spriteToFollow) {
     _dragTrail = new ParticleEffect();
     _dragTrail.load(Gdx.files.internal("trail.p"), Gdx.files.internal(""));
-    _dragTrail.reset();
     _spriteToFollow = spriteToFollow;
   }
 

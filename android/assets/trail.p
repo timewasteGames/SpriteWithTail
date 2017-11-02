@@ -63,7 +63,7 @@ highMax: 32.0
 relative: false
 scalingCount: 2
 scaling0: 1.0
-scaling1: 0.49019608
+scaling1: 0.5294118
 timelineCount: 2
 timeline0: 0.0
 timeline1: 1.0
@@ -80,12 +80,28 @@ active: false
 - Gravity - 
 active: false
 - Tint - 
-colorsCount: 3
+colorsCount: 15
 colors0: 1.0
 colors1: 0.12156863
 colors2: 0.047058824
-timelineCount: 1
+colors3: 1.0
+colors4: 0.99607843
+colors5: 0.047058824
+colors6: 0.047058824
+colors7: 1.0
+colors8: 0.34901962
+colors9: 0.047058824
+colors10: 0.2901961
+colors11: 1.0
+colors12: 0.047058824
+colors13: 1.0
+colors14: 0.99607843
+timelineCount: 5
 timeline0: 0.0
+timeline1: 0.19512194
+timeline2: 0.4845089
+timeline3: 0.774555
+timeline4: 1.0
 - Transparency - 
 lowMin: 0.0
 lowMax: 0.0
@@ -94,11 +110,11 @@ highMax: 1.0
 relative: false
 scalingCount: 3
 scaling0: 1.0
-scaling1: 0.75
+scaling1: 0.7894737
 scaling2: 0.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.8
+timeline1: 0.7671233
 timeline2: 1.0
 - Options - 
 attached: false
