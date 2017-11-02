@@ -40,7 +40,7 @@ public class SpriteWithTail extends ApplicationAdapter {
     initCatmullRomSpline();
 
     // Tail effect
-    _tailEffect = new TailEffectRainbow(_sprite);
+    _tailEffect = new TailEffectHangAbout(_sprite);
     _tailEffect.start();
 
     Gdx.input.setInputProcessor(new GestureDetector(new GameListener()));
