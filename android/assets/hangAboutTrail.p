@@ -103,14 +103,10 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 3
+scalingCount: 1
 scaling0: 1.0
-scaling1: 1.0
-scaling2: 0.0
-timelineCount: 3
+timelineCount: 1
 timeline0: 0.0
-timeline1: 0.9520548
-timeline2: 1.0
 - Options - 
 attached: false
 continuous: false
