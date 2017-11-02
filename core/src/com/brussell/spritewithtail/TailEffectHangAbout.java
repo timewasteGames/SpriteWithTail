@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class TailEffectHangAbout implements TailEffect {
   private final ParticleEffect _dragTrail;
   private final Sprite _spriteToFollow;
+  private boolean _render = false;
 
   public TailEffectHangAbout(final Sprite spriteToFollow) {
     _dragTrail = new ParticleEffect();
@@ -18,7 +19,12 @@ public class TailEffectHangAbout implements TailEffect {
   @Override
   public void render(final SpriteBatch batch, final float deltaTime) {
     _dragTrail.setPosition(_spriteToFollow.getX() + _spriteToFollow.getOriginX(), _spriteToFollow.getY() + _spriteToFollow.getOriginY());
-    _dragTrail.draw(batch, deltaTime);
+    if (_render) {
+      _dragTrail.draw(batch, deltaTime);
+    }
+    else {
+      _dragTrail.update(deltaTime);
+    }
     if (_dragTrail.isComplete()) {
       _dragTrail.start();
     }
@@ -32,5 +38,10 @@ public class TailEffectHangAbout implements TailEffect {
   @Override
   public void end() {
     _dragTrail.allowCompletion();
+  }
+
+  @Override
+  public void setRender(final boolean render) {
+    _render = render;
   }
 }

@@ -10,15 +10,17 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class SpriteWithTail extends ApplicationAdapter {
   private static final int NUM_CONTROL_POINTS = 10;
-  private static final float SPEED = 10f;
+  private static final float SPEED = 20f;
 
   // Rendering
   private SpriteBatch _spriteBatch;
   private Sprite _sprite;
-  private TailEffect _tailEffect;
+  private final Array<TailEffect> _tailEffects = new Array<TailEffect>();
+  private int _activeTailEffect;
 
   // The flight path definition
   private Vector2[] _controlPoints;
@@ -40,8 +42,10 @@ public class SpriteWithTail extends ApplicationAdapter {
     initCatmullRomSpline();
 
     // Tail effect
-    _tailEffect = new TailEffectHangAbout(_sprite);
-    _tailEffect.start();
+    _tailEffects.add(new TailEffectRainbow(_sprite));
+    _tailEffects.add(new TailEffectMultiColored(_sprite));
+    _tailEffects.add(new TailEffectHangAbout(_sprite));
+    _activeTailEffect = 0;
 
     Gdx.input.setInputProcessor(new GestureDetector(new GameListener()));
   }
@@ -50,7 +54,18 @@ public class SpriteWithTail extends ApplicationAdapter {
     @Override
     public boolean tap(final float x, final float y, final int count, final int button) {
       initCatmullRomSpline();
-      _tailEffect.start();
+      for (TailEffect tailEffect : _tailEffects) {
+        tailEffect.start();
+      }
+      return false;
+    }
+
+    @Override
+    public boolean fling(final float velocityX, final float velocityY, final int button) {
+      // Cycle the tail effect currently displayed.
+      _tailEffects.get(_activeTailEffect).setRender(false);
+      _activeTailEffect = _activeTailEffect == _tailEffects.size - 1 ? 0 : _activeTailEffect + 1;
+      _tailEffects.get(_activeTailEffect).setRender(true);
       return false;
     }
   }
@@ -72,7 +87,7 @@ public class SpriteWithTail extends ApplicationAdapter {
         avoidInfiniteLoopCount++;
       }
       // Prefer to not flip back on ourselves, but OK if can't avoid in reasonable number of tries
-      while (Math.abs(pointOnFlightPath.angle(_controlPoints[i - 1])) > 90f && avoidInfiniteLoopCount < 100);
+      while (Math.abs(pointOnFlightPath.angle(_controlPoints[i - 1])) > 90f && avoidInfiniteLoopCount < 2500);
       _controlPoints[i] = pointOnFlightPath;
     }
     // Landing
@@ -87,7 +102,9 @@ public class SpriteWithTail extends ApplicationAdapter {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     _spriteBatch.begin();
-    _tailEffect.render(_spriteBatch, Gdx.graphics.getDeltaTime());
+    for (TailEffect tailEffect : _tailEffects) {
+      tailEffect.render(_spriteBatch, Gdx.graphics.getDeltaTime());
+    }
     _sprite.draw(_spriteBatch);
     _spriteBatch.end();
 
@@ -108,7 +125,9 @@ public class SpriteWithTail extends ApplicationAdapter {
     }
     // End up nicely where we started.
     else {
-      _tailEffect.end();
+      for (TailEffect tailEffect : _tailEffects) {
+        tailEffect.end();
+      }
       _sprite.setPosition(_controlPoints[0].x, _controlPoints[0].y);
       _sprite.setRotation(0);
     }

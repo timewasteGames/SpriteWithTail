@@ -8,4 +8,6 @@ public interface TailEffect {
   void start();
 
   void end();
+
+  void setRender(final boolean render);
 }

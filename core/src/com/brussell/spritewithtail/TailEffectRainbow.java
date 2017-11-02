@@ -18,6 +18,8 @@ public class TailEffectRainbow implements TailEffect {
   private final Array<ParticleEmitter.RangedNumericValue> _xOffsets = new Array<ParticleEmitter.RangedNumericValue>();
   private final Array<ParticleEmitter.RangedNumericValue> _yOffsets = new Array<ParticleEmitter.RangedNumericValue>();
 
+  private boolean _render = false;
+
   public TailEffectRainbow(final Sprite spriteToFollow) {
     // Create multiple effects with a different color each.
     addNewTrailEffect(Color.RED);
@@ -62,7 +64,12 @@ public class TailEffectRainbow implements TailEffect {
       offsetVec.rotate(rotationIncrements);
       _xOffsets.get(i).setLow(offsetVec.x);
       _yOffsets.get(i).setLow(offsetVec.y);
-      _dragTrails.get(i).draw(batch, deltaTime);
+      if (_render) {
+        _dragTrails.get(i).draw(batch, deltaTime);
+      }
+      else {
+        _dragTrails.get(i).update(deltaTime);
+      }
     }
   }
 
@@ -78,5 +85,10 @@ public class TailEffectRainbow implements TailEffect {
     for (ParticleEffect particleEffect : _dragTrails) {
       particleEffect.allowCompletion();
     }
+  }
+
+  @Override
+  public void setRender(final boolean render) {
+    _render = render;
   }
 }

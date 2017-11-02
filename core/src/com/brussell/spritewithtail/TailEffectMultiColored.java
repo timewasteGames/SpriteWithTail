@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class TailEffectMultiColored implements TailEffect {
   private final ParticleEffect _dragTrail;
   private final Sprite _spriteToFollow;
+  private boolean _render = false;
 
   public TailEffectMultiColored(final Sprite spriteToFollow) {
     _dragTrail = new ParticleEffect();
@@ -18,7 +19,12 @@ public class TailEffectMultiColored implements TailEffect {
   @Override
   public void render(final SpriteBatch batch, final float deltaTime) {
     _dragTrail.setPosition(_spriteToFollow.getX() + _spriteToFollow.getOriginX(), _spriteToFollow.getY() + _spriteToFollow.getOriginY());
-    _dragTrail.draw(batch, deltaTime);
+    if (_render) {
+      _dragTrail.draw(batch, deltaTime);
+    }
+    else {
+      _dragTrail.update(deltaTime);
+    }
   }
 
   @Override
@@ -29,5 +35,10 @@ public class TailEffectMultiColored implements TailEffect {
   @Override
   public void end() {
     _dragTrail.allowCompletion();
+  }
+
+  @Override
+  public void setRender(final boolean render) {
+    _render = render;
   }
 }
