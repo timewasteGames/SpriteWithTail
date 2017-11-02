@@ -10,8 +10,8 @@ max: 500
 - Emission - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 60.0
-highMax: 60.0
+highMin: 30.0
+highMax: 30.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -61,12 +61,10 @@ lowMax: 0.0
 highMin: 32.0
 highMax: 32.0
 relative: false
-scalingCount: 2
+scalingCount: 1
 scaling0: 1.0
-scaling1: 0.5294118
-timelineCount: 2
+timelineCount: 1
 timeline0: 0.0
-timeline1: 1.0
 - Y Scale - 
 active: false
 - Velocity - 
@@ -108,14 +106,10 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 3
+scalingCount: 1
 scaling0: 1.0
-scaling1: 0.7894737
-scaling2: 0.0
-timelineCount: 3
+timelineCount: 1
 timeline0: 0.0
-timeline1: 0.7671233
-timeline2: 1.0
 - Options - 
 attached: false
 continuous: true

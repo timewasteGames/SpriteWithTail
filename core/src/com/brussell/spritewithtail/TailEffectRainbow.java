@@ -17,6 +17,7 @@ public class TailEffectRainbow implements TailEffect {
   private final Array<ParticleEffect> _dragTrails = new Array<ParticleEffect>();
   private final Array<ParticleEmitter.RangedNumericValue> _xOffsets = new Array<ParticleEmitter.RangedNumericValue>();
   private final Array<ParticleEmitter.RangedNumericValue> _yOffsets = new Array<ParticleEmitter.RangedNumericValue>();
+  private final Array<ParticleEmitter.ScaledNumericValue> _particleRotations = new Array<ParticleEmitter.ScaledNumericValue>();
 
   private boolean _render = false;
 
@@ -48,22 +49,27 @@ public class TailEffectRainbow implements TailEffect {
     offsetValueY.setLow(0f);
     offsetValueY.setActive(true);
 
+    ParticleEmitter.ScaledNumericValue particleRotation = particleEffect.getEmitters().first().getRotation();
+    particleRotation.setActive(true);
+
     _dragTrails.add(particleEffect);
     _xOffsets.add(offsetValueX);
     _yOffsets.add(offsetValueY);
+    _particleRotations.add(particleRotation);
   }
 
   @Override
   public void render(final SpriteBatch batch, final float deltaTime) {
-    Vector2 offsetVec = new Vector2(Vector2.X);
     // Put emitters in a arc behind the sprite.
     final float rotationIncrements = ARC_DEGREES / _dragTrails.size;
+    Vector2 offsetVec = new Vector2(Vector2.X);
     offsetVec.rotate(_spriteToFollow.getRotation() + 175f - ARC_DEGREES / 2f).scl(_spriteToFollow.getWidth() * 0.3f);
     for (int i = 0; i < _dragTrails.size; i++) {
       _dragTrails.get(i).setPosition(_spriteToFollow.getX() + _spriteToFollow.getOriginX(), _spriteToFollow.getY() + _spriteToFollow.getOriginY());
       offsetVec.rotate(rotationIncrements);
       _xOffsets.get(i).setLow(offsetVec.x);
       _yOffsets.get(i).setLow(offsetVec.y);
+      _particleRotations.get(i).setHigh(_spriteToFollow.getRotation());
       if (_render) {
         _dragTrails.get(i).draw(batch, deltaTime);
       }
